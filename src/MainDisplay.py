@@ -2,11 +2,13 @@ import sys
 import tkinter
 import tkinter.scrolledtext
 import datetime
+from src.FileIO import FileIO
 
 
 class MainDisplay:
 
     def __init__(self):
+        self.__io = FileIO()
         width = 300
         height = 200
         self.__historyList = list()
@@ -28,16 +30,18 @@ class MainDisplay:
         button.pack(side = tkinter.TOP, pady = 20)
 
     def __add_history_display_area(self):
-        bottomFrame = tkinter.LabelFrame(self.window, text = "History", bd = 2, relief = tkinter.SUNKEN)
+        bottomFrame = tkinter.LabelFrame(self.window, text = "History")
         bottomFrame.pack(expand = 1, fill = tkinter.BOTH, padx = 10)
 
-        self.__history = tkinter.scrolledtext.ScrolledText(master = bottomFrame)
-        self.__history.pack(padx = 10)
+        self.__scrolled_text = tkinter.scrolledtext.ScrolledText(master = bottomFrame)
+        self.__scrolled_text.pack()
 
     def __register(self, event):
         now = datetime.datetime.now()
-        self.__historyList.insert(0, now)
-        self.__history.insert("1.0", str(now) + "\n")
+        text = str(now) + "\n"
+        self.__io.write(text)
+        self.__scrolled_text.insert("1.0", text)
+
 
 disp = MainDisplay()
 disp.start()
